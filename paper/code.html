@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="generator" content="litedown 0.8">
+<title>Replication script for: tiltdens: Tilted and Data-Sharpened Density Estimation in R</title>
+<style type="text/css">
+body {
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 1.5;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+body, .abstract, code, .footnotes, footer, #refs, .caption { font-size: .9em; }
+li li { font-size: .95em; }
+ul:has(li > input[type="checkbox"]) { list-style: none; padding-left: 1em; }
+*, :before, :after { box-sizing: border-box; }
+a { color: steelblue; }
+pre, img { max-width: 100%; }
+pre { white-space: pre-wrap; word-break: break-word; }
+pre code { display: block; padding: 1em; overflow-x: auto; }
+code { font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace; }
+:not(pre, th) > code, code[class], div > .caption { background: #f8f8f8; }
+pre > code:is(:not([class]), .language-plain, .language-none, .plain), .box, .figure, .table { background: inherit; border: 1px solid #eee; }
+pre > code {
+  &.message { border-color: #9eeaf9; }
+  &.warning { background: #fff3cd; border-color: #fff3cd; }
+  &.error { background: #f8d7da; border-color: #f8d7da; }
+}
+.fenced-chunk { border-left: 1px solid #666; }
+.code-fence {
+  opacity: .4;
+  border: 1px dashed #666;
+  border-left: 2px solid;
+  &:hover { opacity: inherit; }
+}
+.box, .figure, .table, table { margin: 1em auto; }
+div > .caption { padding: 1px 1em; }
+.figure { p:has(img, svg), pre:has(svg) { text-align: center; } }
+.flex-col { display: flex; justify-content: space-between; }
+table {
+  &:only-child:not(.table > *) { margin: auto; }
+  th, td { padding: 5px; font-variant-numeric: tabular-nums; }
+  thead, tfoot, tr:nth-child(even) { background: whitesmoke; }
+  thead th { border-bottom: 1px solid #ddd; }
+  &:not(.datatable-table) {
+    border-top: 1px solid #666;
+    border-bottom: 1px solid #666;
+  }
+}
+blockquote {
+  color: #666;
+  margin: 0;
+  padding: 1px 1em;
+  border-left: .5em solid #eee;
+}
+hr, .footnotes::before { border: 1px dashed #ddd; }
+.frontmatter { text-align: center; }
+#TOC {
+  a { text-decoration: none; }
+  ul { list-style: none; padding-left: 1em; }
+  & > ul { padding: 0; }
+  ul ul { border-left: 1px solid lightsteelblue; }
+}
+.body h2 { border-bottom: 1px solid #666; }
+.body .appendix, .appendix ~ h2 { border-bottom-style: dashed; }
+.main-number::after { content: "."; }
+span[class^="ref-number-"] { font-weight: bold; }
+.ref-number-fig::after, .ref-number-tab::after { content: ":"; }
+.cross-ref-chp::before { content: "Chapter "; }
+.cross-ref-sec::before { content: "Section "; }
+.cross-ref-fig::before, .ref-number-fig::before { content: "Figure "; }
+.cross-ref-tab::before, .ref-number-tab::before { content: "Table "; }
+.cross-ref-eqn::before, .MathJax_ref:has(mjx-mtext > mjx-c + mjx-c)::before { content: "Equation "; }
+.abstract, #refs {
+  &::before { display: block; margin: 1em auto; font-weight: bold; }
+}
+.abstract::before { content: "Abstract"; text-align: center; }
+#refs::before { content: "Bibliography"; font-size: 1.5em; }
+.ref-paren-open::before { content: "("; }
+.ref-paren-close::after { content: ")"; }
+.ref-semicolon::after { content: "; "; }
+.ref-and::after { content: " and "; }
+.ref-et-al::after { content: " et al."; font-style: italic; }
+.footnote-ref a {
+  &::before { content: "["; }
+  &::after { content: "]"; }
+}
+section.footnotes {
+  margin-top: 2em;
+  &::before { content: ""; display: block; max-width: 20em; }
+}
+.fade {
+  background: repeating-linear-gradient(135deg, white, white 30px, #ddd 32px, #ddd 32px);
+  opacity: 0.6;
+}
+
+@media print {
+  body { max-width: 100%; }
+  tr, img { break-inside: avoid; }
+}
+@media only screen and (min-width: 992px) {
+  body:not(.pagesjs) pre:has(.line-numbers):not(:hover) { white-space: pre; }
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xiee/utils@1.14.73/css/prism-xcode.min.css">
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js" defer></script>
+</head>
+<body>
+<div class="frontmatter">
+<div class="title"><h1>Replication script for: tiltdens: Tilted and Data-Sharpened Density Estimation in R</h1></div>
+<div class="author"><h2>Hassan Doosti</h2></div>
+</div>
+<div class="body">
+<p>This script reproduces every numerical result, table and figure in the
+manuscript. It needs the <code>tiltdens</code> package (CRAN, or
+<code>remotes::install_github(&quot;DoostiH/tiltdens&quot;)</code>) and <code>MASS</code>, which ships with R.</p>
+<p>Run time is about fifteen minutes on a laptop, almost all of it in the
+simulation of Section 5.1. Every random draw is seeded, so the numbers
+below should match the manuscript exactly on any platform with the same R
+version; small differences in the last digit across platforms are possible
+in the optimised-boundary fits, where near-ties between candidate
+boundaries are broken by floating-point comparisons.</p>
+<pre><code class="language-r">library(&quot;tiltdens&quot;)
+options(width = 76)
+set.seed(2016)
+</code></pre>
+<h2 id="sec:section-4-using-the-package">Section 4: Using the package</h2>
+<pre><code class="language-r">x &lt;- c(rnorm(50, -1.5), rnorm(50, 1.5))
+
+fit &lt;- tilt_density_cv(x)
+fit
+</code></pre>
+<pre><code>## 
+## Tilted density estimate, cross-validated (Doosti, Hall &amp; Mateu 2018)
+## 
+## Call:      tilt_density_cv(x = x)
+## Data:      x (100 obs.)
+## Bandwidth: 0.62462  (gaussian kernel)
+## Blocks:    3
+## Breaks:    at ranks 33, 67  (x = -1.32,  1.10), chosen by &quot;equal&quot;
+## CV:        -0.14876
+## Minimum:   7.8671e-05  (a proper density cannot go below zero)
+</code></pre>
+<pre><code class="language-r">summary(fit)
+</code></pre>
+<pre><code>## 
+## Method:           tilt_density_cv
+## Observations:     100
+## Kernel:           gaussian, bandwidth 0.62462
+## Distinct weights: 3 of 3 allowed
+## Weight range:     0.0082619 to 0.0110686  (largest / smallest positive = 1.34)
+## Block boundaries: -1.3203,  1.1041
+## Criterion:        cv = -0.14876
+## Minimum density:  7.87e-05
+</code></pre>
+<p>The comparator goes negative; the tilted estimate cannot.</p>
+<pre><code class="language-r">c(sinc = min(sinc_density(x)$y), tilted = min(fit$y))
+</code></pre>
+<pre><code>##          sinc        tilted 
+## -1.425296e-02  7.867101e-05
+</code></pre>
+<p>Block boundaries: fixed, at the troughs of a pilot estimate, or optimised.</p>
+<pre><code class="language-r">sapply(c(&quot;equal&quot;, &quot;modal&quot;, &quot;optimal&quot;), function(b)
+  tilt_density(x, m = 3, breaks = b)$distance2)
+</code></pre>
+<pre><code>##       equal       modal     optimal 
+## 0.001974659 0.002116792 0.001629076
+</code></pre>
+<p>Kernels and canonical bandwidths.</p>
+<pre><code class="language-r">tilt_kernels()
+</code></pre>
+<pre><code>## [1] &quot;gaussian&quot;     &quot;laplace&quot;      &quot;laplace2&quot;     &quot;laplace3&quot;    
+## [5] &quot;laplace4&quot;     &quot;epanechnikov&quot; &quot;biweight&quot;     &quot;triweight&quot;   
+## [9] &quot;triangular&quot;
+</code></pre>
+<pre><code class="language-r">round(sapply(c(&quot;gaussian&quot;, &quot;epanechnikov&quot;, &quot;biweight&quot;), bw_canonical_factor), 4)
+</code></pre>
+<pre><code>##     gaussian epanechnikov     biweight 
+##       0.7764       1.7188       2.0362
+</code></pre>
+<p>Shape constraints and multivariate data (shown but not printed in the paper).</p>
+<pre><code class="language-r">tilt_density(x, m = Inf, constraint = &quot;unimodal&quot;)
+</code></pre>
+<pre><code>## 
+## Tilted density estimate (Doosti &amp; Hall 2016)
+## 
+## Call:      tilt_density(x = x, m = Inf, constraint = &quot;unimodal&quot;)
+## Data:      x (100 obs.)
+## Bandwidth: 0.4878  (gaussian kernel)
+## Comparator: sinc with bandwidth 0.4878 
+## Blocks:    100 (one per observation)
+## Distance:  0.0041306 (squared L2 to the comparator)
+## Minimum:   6.7226e-10  (a proper density cannot go below zero)
+</code></pre>
+<pre><code class="language-r">X &lt;- cbind(x, c(rnorm(50, -1), rnorm(50, 1)))
+tilt_density(X)
+</code></pre>
+<pre><code>## 
+## Tilted density estimate (Doosti &amp; Hall 2016, Section 3.3)
+## 
+## Call:      tilt_density(x = X)
+## Data:      X (100 obs., 2 dimensions)
+## Bandwidth: 0.7142 (product kernel)
+## Comparator: sinc with bandwidth 0.7142 
+## Distance:  0.0012356 (squared L2 to the comparator)
+## 
+## Use predict() to evaluate, or plot() for a two-dimensional contour.
+</code></pre>
+<h2 id="sec:section-5-1-simulation-table-1">Section 5.1: Simulation (Table 1)</h2>
+<p>Four Marron and Wand (1992) densities, n = 100, 40 replicates. Samples for
+each density are drawn up front from a fixed seed, so partial re-runs give
+identical results.</p>
+<pre><code class="language-r">mw &lt;- list(
+  Gau = list(w = 1,           mu = 0,            sd = 1),
+  KtU = list(w = c(2, 1) / 3, mu = c(0, 0),      sd = c(1, 1 / 10)),
+  SeB = list(w = c(1, 1) / 2, mu = c(-3/2, 3/2), sd = c(1/2, 1/2)),
+  SkB = list(w = c(3, 1) / 4, mu = c(0, 3/2),    sd = c(1, 1/3))
+)
+mw_pdf &lt;- function(d) function(t)
+  Reduce(`+`, Map(function(w, m, s) w * dnorm(t, m, s), d$w, d$mu, d$sd))
+mw_rnd &lt;- function(d, n) {
+  k &lt;- sample(length(d$w), n, TRUE, d$w)
+  rnorm(n, d$mu[k], d$sd[k])
+}
+ise_grid &lt;- function(y, grid, truth) {
+  d &lt;- (y - truth(grid))^2
+  sum(diff(grid) * (d[-1] + d[-length(d)]) / 2)
+}
+
+## The seeds below are those used in the manuscript: 20160209 plus the position
+## of the density in the full list of eight Marron-Wand densities.
+seed_of &lt;- c(Gau = 1, KtU = 4, SeB = 7, SkB = 8) + 20160209
+
+n_rep &lt;- 40; n &lt;- 100
+methods &lt;- c(&quot;conventional&quot;, &quot;sinc&quot;, &quot;trapezoid&quot;, &quot;tilt_n&quot;, &quot;tilt_3&quot;, &quot;tilt_cv&quot;)
+mise &lt;- matrix(NA_real_, length(mw), length(methods), dimnames = list(names(mw), methods))
+
+for (nm in names(mw)) {
+  d &lt;- mw[[nm]]; truth &lt;- mw_pdf(d)
+  grid &lt;- seq(min(min(d$mu - 4 * d$sd), -4), max(max(d$mu + 4 * d$sd), 4), length.out = 512)
+  a &lt;- grid[1]; b &lt;- grid[512]
+  set.seed(seed_of[[nm]])
+  xs &lt;- replicate(n_rep, mw_rnd(d, n))
+  out &lt;- matrix(NA_real_, n_rep, length(methods), dimnames = list(NULL, methods))
+  for (r in seq_len(n_rep)) {
+    xr &lt;- xs[, r]; hc &lt;- as.numeric(bw_comparator_cv(xr))
+    out[r, &quot;conventional&quot;] &lt;- ise_grid(density(xr, bw = bw_nrd_robust(xr), from = a, to = b, n = 512)$y, grid, truth)
+    out[r, &quot;sinc&quot;]         &lt;- ise_grid(sinc_density(xr, bw = hc, n = 512, from = a, to = b)$y, grid, truth)
+    out[r, &quot;trapezoid&quot;]    &lt;- ise_grid(trapezoid_density(xr, bw = hc, n = 512, from = a, to = b)$y, grid, truth)
+    out[r, &quot;tilt_n&quot;]       &lt;- ise_grid(tilt_density(xr, m = Inf, comparator_bw = hc, n = 512, from = a, to = b)$y, grid, truth)
+    out[r, &quot;tilt_3&quot;]       &lt;- ise_grid(tilt_density(xr, m = 3,   comparator_bw = hc, n = 512, from = a, to = b)$y, grid, truth)
+    out[r, &quot;tilt_cv&quot;]      &lt;- ise_grid(tilt_density_cv(xr, n = 512, from = a, to = b)$y, grid, truth)
+  }
+  mise[nm, ] &lt;- colMeans(out)
+}
+</code></pre>
+<p>Table 1, MISE x 1000:</p>
+<pre><code class="language-r">round(mise * 1000, 2)
+</code></pre>
+<pre><code>##     conventional  sinc trapezoid tilt_n tilt_3 tilt_cv
+## Gau         5.81  6.14      6.89   5.73   5.77    6.76
+## KtU       104.92 75.82     60.77  74.09  59.03   68.63
+## SeB        43.67 15.22     16.66  13.48  14.31   27.20
+## SkB        11.38 16.61     13.09  15.63  13.22   12.22
+</code></pre>
+<h2 id="sec:section-5-2-old-faithful-figure-1">Section 5.2: Old Faithful (Figure 1)</h2>
+<pre><code class="language-r">x &lt;- faithful$eruptions
+fit_cv   &lt;- tilt_density_cv(x)
+fit_sinc &lt;- sinc_density(x, bw = fit_cv$bw, from = 1, to = 6)
+c(sinc = min(fit_sinc$y), tilted = min(fit_cv$y))
+</code></pre>
+<pre><code>##         sinc       tilted 
+## -0.053137201  0.000220287
+</code></pre>
+<pre><code class="language-r">conv &lt;- density(x, bw = bw_nrd_robust(x), from = 1, to = 6)
+plot(fit_cv$x, fit_cv$y, type = &quot;l&quot;, lwd = 2, xlab = &quot;Eruption duration (minutes)&quot;,
+     ylab = &quot;Density&quot;, ylim = range(0, fit_sinc$y, fit_cv$y, conv$y))
+lines(fit_sinc, col = &quot;red&quot;, lty = 2)
+lines(conv, col = &quot;grey40&quot;, lty = 3)
+abline(h = 0, col = &quot;grey70&quot;); rug(x, col = &quot;grey60&quot;)
+legend(&quot;topleft&quot;, c(&quot;Tilted (CV)&quot;, &quot;Sinc&quot;, &quot;Conventional&quot;),
+       col = c(&quot;black&quot;, &quot;red&quot;, &quot;grey40&quot;), lty = 1:3, lwd = c(2, 1, 1), bty = &quot;n&quot;)
+</code></pre>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-9" /></p>
+<h2 id="sec:section-5-3-galaxy-velocities-figure-2">Section 5.3: Galaxy velocities (Figure 2)</h2>
+<pre><code class="language-r">g &lt;- MASS::galaxies / 1000
+free     &lt;- tilt_density(g, m = Inf)
+unimodal &lt;- tilt_density(g, m = Inf, constraint = &quot;unimodal&quot;)
+c(free = free$distance2, unimodal = unimodal$distance2)
+</code></pre>
+<pre><code>##        free    unimodal 
+## 0.001068358 0.005765238
+</code></pre>
+<pre><code class="language-r">unimodal$distance2 / free$distance2
+</code></pre>
+<pre><code>## [1] 5.396356
+</code></pre>
+<pre><code class="language-r">plot(free$x, free$y, type = &quot;l&quot;, lwd = 2, xlab = &quot;Velocity (1000 km/s)&quot;,
+     ylab = &quot;Density&quot;, ylim = range(0, free$y, unimodal$y))
+lines(unimodal$x, unimodal$y, col = &quot;blue&quot;, lty = 2, lwd = 1.5)
+abline(h = 0, col = &quot;grey70&quot;); rug(g, col = &quot;grey60&quot;)
+legend(&quot;topright&quot;, c(&quot;Tilted, unconstrained&quot;, &quot;Tilted, unimodal&quot;),
+       col = c(&quot;black&quot;, &quot;blue&quot;), lty = 1:2, lwd = c(2, 1.5), bty = &quot;n&quot;)
+</code></pre>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-10" /></p>
+<h2 id="sec:session-information">Session information</h2>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<pre><code>## R version 4.3.3 (2024-02-29 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 11 x64 (build 26200)
+## 
+## Matrix products: default
+## 
+## 
+## locale:
+## [1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
+## [3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
+## [5] LC_TIME=English_Australia.utf8    
+## 
+## time zone: Australia/Sydney
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] tiltdens_0.1.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] MASS_7.3-60.0.1   compiler_4.3.3    cli_3.6.6         tools_4.3.3      
+##  [5] rstudioapi_0.16.0 yaml_2.3.10       knitr_1.52        xfun_0.54        
+##  [9] rlang_1.3.0       evaluate_1.0.5    quadprog_1.5-8
+</code></pre>
+</div>
+</body>
+</html>
