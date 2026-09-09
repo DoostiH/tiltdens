@@ -1,11 +1,4 @@
-# tiltdens 0.1.1 (development)
-
-* `summary()` method for fitted objects.
-* `bw_comparator_cv()` now handles tied observations. Real data are often
-  recorded to limited precision; `faithful$eruptions` has 146 ties among 272
-  values, which previously gave 0/0 in the criterion and a failed fit.
-
-# tiltdens 0.1.0
+# tiltdens 0.1.1
 
 First release.
 
@@ -55,4 +48,7 @@ First release.
 * `sinc_density()` and `trapezoid_density()` provide the infinite-order
   comparator estimators on their own.
 * `bw_comparator_cv()`, `bw_flattop()` and `bw_nrd_robust()` select bandwidths.
-* Fitted objects inherit from `"density"`, so base plotting works unchanged.
+* Fitted objects inherit from `"density"`, so base plotting works unchanged,
+  and have `print()`, `summary()` and `predict()` methods.
+* `bw_comparator_cv()` handles tied observations, which real data recorded to
+  limited precision routinely contain.

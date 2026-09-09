@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Hassan Doosti \email{hassan.doosti@mq.edu.au}
+\strong{Maintainer}: Hassan Doosti \email{hassan.doosti@mq.edu.au} [copyright holder]
 
 }
 \keyword{internal}
