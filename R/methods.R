@@ -157,6 +157,7 @@ summary.tiltdens <- function(object, ...) {
 
 #' @rdname summary.tiltdens
 #' @param x A `"summary.tiltdens"` object.
+#' @param digits Number of significant digits to print.
 #' @export
 print.summary.tiltdens <- function(x, digits = getOption("digits") - 2L, ...) {
   cat("\nMethod:           ", x$method, "\n", sep = "")

@@ -15,6 +15,8 @@
 \item{...}{Ignored.}
 
 \item{x}{A `"summary.tiltdens"` object.}
+
+\item{digits}{Number of significant digits to print.}
 }
 \value{
 An object of class `"summary.tiltdens"`: a list with the method,
