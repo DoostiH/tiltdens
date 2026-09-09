@@ -117,8 +117,14 @@ bw_comparator_cv <- function(x, comparator = c("sinc", "trapezoid"),
   h_grid <- 1 / q_grid
 
   ## Both terms depend on the data only through sums over pairwise differences.
+  ## Tied observations give a zero difference, at which both kernels have a
+  ## finite limit rather than the 0/0 the formulas below would produce; those
+  ## pairs are counted separately at the limiting value.
   d     <- outer(x, x, "-")
   d_off <- d[lower.tri(d) | upper.tri(d)]
+  tied  <- d_off == 0
+  n_tied <- sum(tied)
+  d_off <- d_off[!tied]
 
   cv    <- numeric(length(h_grid))
   chunk <- max(1L, floor(4e6 / max(1L, length(d_off))))
@@ -130,14 +136,14 @@ bw_comparator_cv <- function(x, comparator = c("sinc", "trapezoid"),
 
     if (comparator == "sinc") {
       kern <- sin(tt) / (pi * d_off)
-      sum_kern <- colSums(kern)
+      sum_kern <- colSums(kern) + n_tied / (pi * hh)
       ## The sinc kernel is its own self-convolution.
       sum_self <- sum_kern + n / (pi * hh)
     } else {
       kern <- sweep(cos(tt) - cos(2 * tt), 2L, hh, "*") / (pi * d_off^2)
-      sum_kern <- colSums(kern)
+      sum_kern <- colSums(kern) + n_tied * 3 / (2 * pi * hh)
       sum_self <- colSums(sweep(trapezoid_self_conv(tt), 2L, hh, "/")) +
-        n * (4 / 3) / (pi * hh)
+        (n + n_tied) * (4 / 3) / (pi * hh)
     }
 
     cv[idx] <- sum_self / n^2 - 2 * sum_kern / (n * (n - 1))

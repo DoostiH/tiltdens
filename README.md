@@ -203,18 +203,16 @@ against a comparator estimator, the 2018 method against the leave-one-out fit.
 One solver therefore serves both, and the solution is unique rather than
 something a search has to hunt for.
 
-A few things differ from the original MATLAB code written for the papers:
+Some implementation notes:
 
-- Weight selection is solved exactly with `quadprog` (with a projected-gradient
-  fallback), rather than by a derivative-free pattern search over a
-  100-dimensional simplex.
+- Weight selection is solved exactly with `quadprog`, with a projected-gradient
+  fallback for ill-conditioned cases.
 - The quadrature for the oscillatory cross terms adapts its node count to the
-  frequency. A fixed rule loses all accuracy once the pairwise data distance
-  exceeds a few tens of bandwidths.
-- Block boundaries are computed in one place from the ranks of the sample, so
-  the grouping and the weight assignment cannot drift apart.
-- Comparator bandwidths are computed from the data rather than loaded from
-  precomputed files.
+  frequency, so accuracy does not depend on the ratio of data range to
+  bandwidth.
+- Block boundaries are computed in one place from the ranks of the sample.
+- Comparator bandwidths are computed from the data by a bounded
+  cross-validation search.
 
 `NEWS.md` has the full list.
 
@@ -226,7 +224,7 @@ force — rather than checking that output matches stored numbers.
 
 ## MATLAB
 
-The original MATLAB code from the papers, cleaned up and documented, lives at
+A MATLAB implementation of the same methods is at
 [DoostiH/tilted-density-estimation](https://github.com/DoostiH/tilted-density-estimation).
 The two implementations agree to 12 significant figures on every shared
 quantity.

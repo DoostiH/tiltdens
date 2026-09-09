@@ -13,12 +13,6 @@ authors:
   - family-names: Doosti
     given-names: Hassan
     affiliation: "Macquarie University, Sydney, Australia"
-  - family-names: Mateu
-    given-names: Jorge
-    affiliation: "Universitat Jaume I, Castellon, Spain"
-  - family-names: Hall
-    given-names: Peter
-    affiliation: "The University of Melbourne, Melbourne, Australia"
 references:
   - type: article
     title: "Making a non-parametric density estimator more attractive, and more accurate, by data perturbation"

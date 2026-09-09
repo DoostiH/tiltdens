@@ -1,48 +1,69 @@
 # JSS manuscript
 
-`tiltdens-jss.Rmd` is a skeleton for a Journal of Statistical Software
-submission. It has the section structure JSS expects and, in HTML comments, what
-belongs in each section and why. Replace the comments with prose.
+| File | What it is |
+|---|---|
+| `tiltdens-jss.pdf` | The manuscript, 12 pages, compiled |
+| `tiltdens-jss.Rnw` | Its source (Sweave + `jss.cls`) |
+| `tiltdens.bib` | References |
+| `code.R` | Standalone replication script — reproduces every result, table and figure |
+| `sim/` | Cached simulation results, read by the `.Rnw` when building the PDF |
+| `jss.cls`, `jss.bst`, `jsslogo.jpg` | JSS style files, so the PDF builds anywhere |
 
-## Building it
+## What JSS asks for at submission
+
+From their author information page:
+
+1. **PDF manuscript in JSS style** — `tiltdens-jss.pdf`. Done.
+2. **Source code for the software** — the package. On CRAN once accepted; the
+   tarball otherwise.
+3. **Replication materials** — `code.R`, plus a file `code.html` produced by
+   running `knitr::spin("code.R")`, which must end with `sessionInfo()`. The
+   script already ends that way. **Generate `code.html` on your own machine**,
+   because JSS wants the session information from a real platform, and because
+   it takes about fifteen minutes:
+
+   ```r
+   install.packages("knitr")   # if needed
+   setwd("path/to/paper")
+   knitr::spin("code.R")
+   ```
+
+   This runs every line and writes `code.html`. Compare its numbers against the
+   PDF; they should match, with at most last-digit differences in the
+   optimised-boundary fits.
+
+Their other stated requirements, and where we stand:
+
+- *Discuss advantages and disadvantages against existing implementations, with
+  empirical illustrations* — Sections 5 and 6, and Table 2.
+- *Extensive simulation studies are discouraged* — Section 5.1 is four densities
+  and forty replicates, and says why.
+- *Replication within one hour on a regular PC* — about fifteen minutes.
+- *S3 classes with print, plot and summary methods* — all three exist, plus
+  `predict`. The `summary` method was added for this submission.
+- *GPL-compatible licence* — MIT is GPL-compatible.
+- *Software on CRAN, not just GitHub* — submitted 9 September 2026, pending
+  manual inspection.
+- *They encourage including the JSS article as a package vignette* — optional;
+  worth doing after acceptance, when the text is final.
+
+## Rebuilding the PDF
 
 ```r
-install.packages("rticles")
-rmarkdown::render("tiltdens-jss.Rmd")
+Sweave("tiltdens-jss.Rnw")
 ```
 
-`rticles::jss_article` supplies `jss.cls` and the required formatting. JSS also
-accepts `.Rnw`; if you prefer Sweave, the same structure carries over.
+then `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` on `tiltdens-jss.tex`. The
+simulation table is read from `sim/`, so this takes under a minute. To
+regenerate `sim/` from scratch, run `code.R`; its Section 5.1 block produces the
+same numbers.
 
-## House style
+## Two things to check before submitting
 
-JSS is strict about markup, and reviewers do send papers back over it:
+**The existing-software paragraph in Section 1.2.** It claims no package in any
+language implements tilted density estimation. That was true when written;
+check it still is.
 
-- Software in `\pkg{}`, functions in `\code{}`, languages in `\proglang{}`.
-- Code chunks use the `R> ` prompt, which the setup chunk already configures.
-- Everything must be reproducible from the sources you submit, including the
-  simulation. Set seeds.
-- The paper and the package are reviewed together, so keep them in step: if a
-  function is renamed, the manuscript changes too.
-
-## The argument to lead with
-
-The two papers are already published, so a restatement will not carry a software
-paper. The contribution to foreground is that both criteria reduce to the *same*
-convex quadratic program over the probability simplex, differing in one linear
-term. That single observation is what makes the package possible: it gives a
-unique solution instead of a derivative-free search over a 100-dimensional
-simplex, and it is what lets block boundaries, shape constraints and the
-multivariate case be added without changing the solver.
-
-Section 3 is where that lives. Give it room.
-
-## One thing to be ready for
-
-A reviewer may try to reproduce Table 1 of either paper and find the numbers
-differ. Get ahead of it. The reasons are known and documented in the MATLAB
-repository: the original bandwidths were selected from among several local
-minima of a multimodal cross-validation criterion in a way that is not
-recoverable, and a defect in the original sampler affected two of the eight test
-densities. A short paragraph saying so, in Section 5 or the discussion, is far
-better than being asked.
+**Table 2.** The capability table for `ks`, `KernSmooth`, `kdensity`,
+`logcondens` and `sharpData` was compiled from their documentation. Worth a
+quick re-read of each package's current help before submitting.

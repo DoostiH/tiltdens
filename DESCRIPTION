@@ -2,12 +2,8 @@ Package: tiltdens
 Type: Package
 Title: Tilted and Data-Sharpened Nonparametric Density Estimation
 Version: 0.1.0
-Authors@R: c(
-    person("Hassan", "Doosti", email = "hassan.doosti@mq.edu.au",
-           role = c("aut", "cre"), comment = "Author of the underlying methods"),
-    person("Jorge", "Mateu", role = "aut"),
-    person("Peter", "Hall", role = "aut",
-           comment = "Author of the underlying methods; deceased 2016"))
+Authors@R: person("Hassan", "Doosti", email = "hassan.doosti@mq.edu.au",
+                  role = c("aut", "cre"))
 Description: High-order nonparametric density estimators built by perturbing a
     conventional kernel estimator, either by re-weighting the observations
     ("tilting") or by moving them ("data sharpening"). The perturbation is

@@ -34,7 +34,7 @@
 #'   Bandwidths are on each kernel's own scale and are not comparable across
 #'   kernels.
 #' @param bw Bandwidth of the tilted estimator. Defaults to the comparator
-#'   bandwidth, as in the original implementation.
+#'   bandwidth, as in the papers.
 #' @param comparator_bw Bandwidth of the comparator. Defaults to
 #'   [bw_comparator_cv()].
 #' @param bw_grid Optional grid of candidate bandwidths. When supplied, the

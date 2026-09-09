@@ -1,18 +1,20 @@
 ## Test environments
-* local Windows, R 4.3.3
-* win-builder, R-devel (2026-09-08 r90509 ucrt)
-* GitHub Actions: Windows, macOS, Ubuntu (release, devel, oldrel-1)
+
+* local: Ubuntu 24.04, R 4.3.3
+* (add win-builder and R-hub results before submitting)
 
 ## R CMD check results
+
 0 errors | 0 warnings | 1 note
 
 * This is a new release.
-* The words flagged as possibly misspelled in DESCRIPTION are the surnames
-  Doosti and Mateu, and the technical terms "comparator" and "sinc" (the sinc
-  kernel, whose Fourier transform is flat on [-1, 1]). All are correct as
-  written.
 
-## Notes
-The package implements two published methods (Doosti and Hall 2016, JRSS-B;
-Doosti, Hall and Mateu 2018, JSPI) that had no implementation available in any
-language. Both DOIs are cited in the DESCRIPTION.
+## Notes for the reviewer
+
+The package implements two published estimators (Doosti and Hall 2016,
+JRSS-B; Doosti, Hall and Mateu 2018, JSPI) that had no implementation in any
+language available to users. Both DOIs are cited in the DESCRIPTION.
+
+Examples and tests are kept small so they run quickly. `sharpen_density()` is
+the only slow function; its example uses a deliberately small optimisation
+budget, which is documented in the help page.

@@ -46,3 +46,25 @@ test_that("the criterion matches a direct evaluation of its definition", {
     }
   }
 })
+
+test_that("tied observations do not break the cross-validation bandwidth", {
+  # Real data are often recorded to limited precision. faithful$eruptions has
+  # 146 ties among 272 values, which used to give 0/0 in the criterion.
+  x <- datasets::faithful$eruptions
+  bw <- bw_comparator_cv(x)
+  expect_true(is.finite(bw) && bw > 0)
+  expect_true(all(is.finite(attr(bw, "cv")$cv)))
+
+  # Adding an exact duplicate must give a finite, nearby answer, not NaN.
+  set.seed(90)
+  y <- rnorm(40)
+  b1 <- as.numeric(bw_comparator_cv(y))
+  b2 <- as.numeric(bw_comparator_cv(c(y, y[1])))
+  expect_true(is.finite(b2))
+  expect_lt(abs(log(b2 / b1)), 0.5)
+
+  for (comparator in c("sinc", "trapezoid")) {
+    expect_true(is.finite(bw_comparator_cv(c(1, 1, 2, 2, 3, 3, 4, 5, 6),
+                                           comparator = comparator)))
+  }
+})

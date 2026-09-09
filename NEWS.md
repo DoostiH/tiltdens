@@ -1,3 +1,10 @@
+# tiltdens 0.1.1 (development)
+
+* `summary()` method for fitted objects.
+* `bw_comparator_cv()` now handles tied observations. Real data are often
+  recorded to limited precision; `faithful$eruptions` has 146 ties among 272
+  values, which previously gave 0/0 in the criterion and a failed fit.
+
 # tiltdens 0.1.0
 
 First release.
@@ -49,18 +56,3 @@ First release.
   comparator estimators on their own.
 * `bw_comparator_cv()`, `bw_flattop()` and `bw_nrd_robust()` select bandwidths.
 * Fitted objects inherit from `"density"`, so base plotting works unchanged.
-
-Notes on the relationship to the original MATLAB code, which was written for the
-papers and is available separately:
-
-* Weight selection is a convex quadratic program. The original handed it to a
-  derivative-free pattern search over a 100-dimensional simplex; this package
-  solves it exactly with `quadprog`, falling back to projected gradient.
-* The quadrature for the oscillatory cross terms now adapts its node count to
-  the frequency. A fixed 13-point rule loses all accuracy once the pairwise
-  data distance exceeds roughly 40 bandwidths.
-* Block boundaries for `m`-group tilting are computed in one place from the
-  ranks of the sample, so the grouping and the weight assignment cannot drift
-  apart.
-* The comparator bandwidth is computed from the data rather than loaded from
-  precomputed files.

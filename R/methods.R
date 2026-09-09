@@ -117,3 +117,59 @@ ise <- function(object, true_density) {
   diff_sq <- (object$y - true_density(grid))^2
   sum(diff(grid) * (diff_sq[-1L] + diff_sq[-length(diff_sq)]) / 2)
 }
+
+#' Summarise a tilted or sharpened density fit
+#'
+#' @param object A `"tiltdens"` object.
+#' @param ... Ignored.
+#'
+#' @return An object of class `"summary.tiltdens"`: a list with the method,
+#'   sample size, bandwidth, kernel, the number of distinct weights and their
+#'   range, the criterion value, and the minimum of the fitted density. It has a
+#'   `print` method.
+#'
+#' @examples
+#' set.seed(1)
+#' summary(tilt_density_cv(c(rnorm(30, -1.5), rnorm(30, 1.5))))
+#'
+#' @export
+summary.tiltdens <- function(object, ...) {
+  w <- object$weights
+  distinct <- length(unique(round(w, 10)))
+  structure(list(
+    method      = object$method,
+    n           = object$n,
+    d           = if (is.null(object$d)) 1L else object$d,
+    bw          = object$bw,
+    kernel      = if (is.null(object$kernel)) "gaussian" else object$kernel$name,
+    comparator  = object$comparator,
+    n_groups    = object$n_groups,
+    n_distinct  = distinct,
+    weight_range = range(w),
+    weight_ratio = max(w) / min(w[w > 0]),
+    breaks      = object$break_values,
+    constraint  = if (is.null(object$constraint)) "none" else object$constraint,
+    criterion   = if (!is.null(object$distance2)) c(distance2 = object$distance2)
+                  else if (!is.null(object$cv)) c(cv = object$cv) else NULL,
+    min_density = if (!is.null(object$y)) min(object$y) else NA_real_
+  ), class = "summary.tiltdens")
+}
+
+#' @rdname summary.tiltdens
+#' @param x A `"summary.tiltdens"` object.
+#' @export
+print.summary.tiltdens <- function(x, digits = getOption("digits") - 2L, ...) {
+  cat("\nMethod:           ", x$method, "\n", sep = "")
+  cat("Observations:     ", x$n, if (x$d > 1) paste0(" (", x$d, " dimensions)"), "\n", sep = "")
+  cat("Kernel:           ", x$kernel, ", bandwidth ", format(x$bw, digits = digits), "\n", sep = "")
+  if (!is.null(x$comparator)) cat("Comparator:       ", x$comparator, "\n", sep = "")
+  cat("Distinct weights: ", x$n_distinct, " of ", x$n_groups, " allowed\n", sep = "")
+  cat("Weight range:     ", paste(format(x$weight_range, digits = digits), collapse = " to "),
+      "  (largest / smallest positive = ", format(x$weight_ratio, digits = 3), ")\n", sep = "")
+  if (length(x$breaks)) cat("Block boundaries: ", paste(format(x$breaks, digits = digits), collapse = ", "), "\n", sep = "")
+  if (!identical(x$constraint, "none")) cat("Constraint:       ", x$constraint, "\n", sep = "")
+  if (!is.null(x$criterion)) cat("Criterion:        ", names(x$criterion), " = ", format(x$criterion, digits = digits), "\n", sep = "")
+  if (is.finite(x$min_density)) cat("Minimum density:  ", format(x$min_density, digits = 3), "\n", sep = "")
+  cat("\n")
+  invisible(x)
+}

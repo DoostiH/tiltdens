@@ -31,7 +31,7 @@ studied in the paper.}
 \item{comparator}{`"sinc"` (default) or `"trapezoid"`.}
 
 \item{bw}{Bandwidth of the tilted estimator. Defaults to the comparator
-bandwidth, as in the original implementation.}
+bandwidth, as in the papers.}
 
 \item{comparator_bw}{Bandwidth of the comparator. Defaults to
 [bw_comparator_cv()].}

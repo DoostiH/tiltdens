@@ -17,13 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Hassan Doosti \email{hassan.doosti@mq.edu.au} (Author of the underlying methods)
-
-Authors:
-\itemize{
-  \item Jorge Mateu
-  \item Peter Hall (Author of the underlying methods; deceased 2016)
-}
+\strong{Maintainer}: Hassan Doosti \email{hassan.doosti@mq.edu.au}
 
 }
 \keyword{internal}
