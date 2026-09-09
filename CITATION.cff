@@ -1,0 +1,51 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the software and the papers describing the methods."
+title: "tiltdens: Tilted and Data-Sharpened Nonparametric Density Estimation"
+abstract: >-
+  An R package for high-order nonparametric density estimators built by
+  perturbing a conventional kernel estimator, either by re-weighting the
+  observations (tilting) or by moving them (data sharpening).
+type: software
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/DoostiH/tiltdens"
+authors:
+  - family-names: Doosti
+    given-names: Hassan
+    affiliation: "Macquarie University, Sydney, Australia"
+  - family-names: Mateu
+    given-names: Jorge
+    affiliation: "Universitat Jaume I, Castellon, Spain"
+  - family-names: Hall
+    given-names: Peter
+    affiliation: "The University of Melbourne, Melbourne, Australia"
+references:
+  - type: article
+    title: "Making a non-parametric density estimator more attractive, and more accurate, by data perturbation"
+    authors:
+      - family-names: Doosti
+        given-names: Hassan
+      - family-names: Hall
+        given-names: Peter
+    journal: "Journal of the Royal Statistical Society: Series B"
+    volume: 78
+    issue: 2
+    start: 445
+    end: 462
+    year: 2016
+    doi: 10.1111/rssb.12112
+  - type: article
+    title: "Nonparametric tilted density function estimation: A cross-validation criterion"
+    authors:
+      - family-names: Doosti
+        given-names: Hassan
+      - family-names: Hall
+        given-names: Peter
+      - family-names: Mateu
+        given-names: Jorge
+    journal: "Journal of Statistical Planning and Inference"
+    volume: 197
+    start: 51
+    end: 68
+    year: 2018
+    doi: 10.1016/j.jspi.2017.12.003

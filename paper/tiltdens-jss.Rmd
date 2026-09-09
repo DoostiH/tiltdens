@@ -1,0 +1,222 @@
+---
+documentclass: jss
+author:
+  - name: Hassan Doosti
+    affiliation: Macquarie University
+    address: >
+      Department of Mathematics and Statistics\
+      Macquarie University\
+      Sydney NSW 2109, Australia
+    email: \email{hassan.doosti@mq.edu.au}
+  - name: Jorge Mateu
+    affiliation: Universitat Jaume I
+title:
+  formatted: "\\pkg{tiltdens}: Tilted and Data-Sharpened Density Estimation in \\proglang{R}"
+  plain:     "tiltdens: Tilted and Data-Sharpened Density Estimation in R"
+  short:     "\\pkg{tiltdens}: Tilted Density Estimation"
+abstract: >
+  PLACEHOLDER. Roughly 150 words. State the problem (a non-negative kernel caps
+  the convergence rate; higher-order kernels break the rate barrier but give
+  estimates that go negative and oscillate), the solution (perturb a
+  conventional estimator toward a higher-order one), the computational point
+  (both published criteria reduce to one convex quadratic program over the
+  probability simplex), and what the package adds beyond the papers.
+keywords:
+  formatted: [tilting, data sharpening, density estimation, quadratic programming, "\\proglang{R}"]
+  plain:     [tilting, data sharpening, density estimation, quadratic programming, R]
+preamble: >
+  \usepackage{amsmath}
+output: rticles::jss_article
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(prompt = TRUE, comment = "", echo = TRUE,
+                      fig.width = 6, fig.height = 4)
+options(prompt = "R> ", continue = "+  ", width = 76, useFancyQuotes = FALSE)
+library("tiltdens")
+set.seed(2016)
+```
+
+# Introduction
+
+<!--
+JSS wants three things established here, in this order.
+
+1. THE STATISTICAL PROBLEM. A conventional kernel density estimator with a
+   non-negative kernel converges at O_p(n^{-4/5}) when f has two bounded
+   derivatives, and cannot do better however smooth f is. Higher-order and
+   infinite-order kernels break that barrier, but their estimates take negative
+   values and oscillate in the tails, so they are not densities and they suggest
+   structure that is not there.
+
+2. WHY EXISTING SOFTWARE DOES NOT SOLVE IT. This is the paragraph reviewers
+   read most carefully. Be specific and verifiable:
+     - ks, KernSmooth, sm, kedd: conventional and higher-order kernels, no
+       perturbation machinery.
+     - kdensity: parametric starts and asymmetric kernels, a different device.
+     - logcondens, and the shape-constrained literature: impose shape by
+       maximum likelihood under log-concavity, not by tilting.
+     - sharpData: data sharpening, but for LOCAL LINEAR REGRESSION following
+       Choi, Hall and Rousson (2000), not for density estimation.
+   Conclusion to state plainly: no package in any language implements tilted
+   density estimation.
+
+3. THE CONTRIBUTION. Split it honestly into (a) implementing two published
+   methods, and (b) the computational reformulation and the extensions below.
+-->
+
+# Perturbed density estimation
+
+<!--
+Keep this section short. JSS is a software journal: state the methods precisely
+enough that the code is intelligible, and cite the papers for the theory.
+
+2.1 Tilting. fhat(x | h, p) = sum_i p_i K_h(x - x_i), p on the simplex.
+    Chosen to minimise ||fhat - fcheck|| for an infinite-order comparator
+    fcheck (Doosti and Hall 2016, equation 2.4).
+
+2.2 Data sharpening. fhat(x | h, q) with the observations moved rather than
+    reweighted (equation 2.2 of the same paper).
+
+2.3 The cross-validation criterion. CV(h, p) of Doosti, Hall and Mateu (2018),
+    equation (2.1), which removes the comparator entirely.
+
+State the rate result and the positivity property, and move on.
+-->
+
+# One convex program
+
+<!--
+THIS IS THE SOFTWARE CONTRIBUTION. Give it the space it deserves; it is what
+distinguishes the paper from a re-statement of the two articles.
+
+The argument, which is worth writing out in full:
+
+  Both criteria have the form p'Ap - 2 f'p + const, with
+
+    A_ij = (K * K)(x_i - x_j),
+
+  and they differ ONLY in the linear term f. The 2016 criterion takes f from the
+  cross terms against the comparator; the 2018 criterion takes it from the
+  leave-one-out fit. Minimising either over {p >= 0, sum p = 1} is therefore the
+  same convex quadratic program, and one solver serves both.
+
+  A is positive semidefinite for ANY kernel, because its Fourier transform is
+  phi_K^2 >= 0 and a function with a non-negative Fourier transform has a PSD
+  Gram matrix. Equivalently p'Ap = integral of fhat^2 >= 0. So the problem has a
+  unique solution whatever K is.
+
+Then the practical consequences, which are the ones a reader will care about:
+
+  - Block structure. With m distinct weights, p = Gq for an indicator matrix G,
+    and the program becomes m-dimensional. Section 4.1 of the 2016 paper treats
+    the block BOUNDARIES as part of the optimisation. Because block sums of A
+    are read off a two-dimensional cumulative sum in constant time, and the
+    resulting program has m variables, every admissible pair of boundaries can
+    be examined for m <= 3.
+
+  - Shape constraints. fhat is linear in p, so a shape requirement on a grid is
+    a set of linear inequalities; the program stays convex with extra rows.
+
+  - Multivariate. A product kernel makes every integral factorise across
+    dimensions, so the l-variate matrices are elementwise products of the
+    univariate ones and the program is unchanged.
+
+  Report timings: m = 3 with breakpoint search, m = n, and the multivariate
+  case, at n = 100.
+-->
+
+# Using the package
+
+<!--
+The usage tour. Keep every chunk short and let the output speak.
+-->
+
+```{r usage-basic}
+x <- c(rnorm(50, -1.5), rnorm(50, 1.5))
+fit <- tilt_density_cv(x)
+fit
+```
+
+<!-- The one comparison that makes the point: the comparator goes negative. -->
+
+```{r usage-positivity}
+c(sinc = min(sinc_density(x)$y), tilted = min(fit$y))
+```
+
+<!--
+Then, one short subsection each, with a running example:
+  4.1 The two criteria: tilt_density() and tilt_density_cv().
+  4.2 Block structure: m and breaks = "optimal" / "equal" / "modal".
+  4.3 Kernels and canonical bandwidths.
+  4.4 Shape constraints.
+  4.5 Multivariate data.
+  4.6 Data sharpening, with a note that it is the slow one.
+Fitted objects inherit from "density", so base plotting works: say so once.
+-->
+
+# Illustrations
+
+<!--
+5.1 SIMULATION. The eight Marron and Wand (1992) densities, n = 100, MISE over
+    500 replicates, comparing the package's estimators against a conventional
+    kernel estimator and the infinite-order ones. The honest headline is the
+    one both papers report: perturbed estimators roughly match conventional
+    kernel methods on simple densities and beat them clearly on complex ones
+    (kurtotic unimodal, separated bimodal). Do not oversell it.
+
+5.2 REAL DATA. Old Faithful is the natural choice since both papers use it, but
+    a second example from a different field would strengthen the paper and
+    would answer a reviewer asking who this is for.
+-->
+
+# Comparison with existing packages
+
+<!--
+Reviewers will ask for this, so include it rather than waiting. A table with
+rows for ks, KernSmooth, kdensity, logcondens, sharpData and tiltdens, and
+columns for: kernel order, guaranteed non-negative, shape constraints,
+multivariate, method. Then two or three sentences on where tiltdens sits.
+
+Be fair to the alternatives. The claim to make is not that tiltdens is better
+than ks; it is that it does something none of them does.
+-->
+
+# Summary and discussion
+
+<!--
+Summarise, then be candid about limitations. Candour here reads as competence:
+
+  - Data sharpening is univariate only, and slow; tilting is usually at least
+    as accurate and far cheaper.
+  - Block structure has no natural multivariate counterpart, so multivariate
+    fits use one weight per observation.
+  - Shape constraints hold on a grid; between grid points a negligible
+    violation is possible.
+  - Bandwidth selection for the comparator uses a bounded cross-validation
+    search, because the criterion is multimodal and its global minimum is often
+    a spurious one at a very small bandwidth.
+
+Then the natural extensions: spatially correlated data, which the 2018 paper
+says the authors were exploring, and constraints beyond the shape ones here.
+-->
+
+# Acknowledgements {-}
+
+<!--
+Peter Hall died in January 2016 and cannot approve this manuscript. Both
+underlying papers are his work as much as anyone's. Say so.
+-->
+
+# References
+
+<!--
+Bibliography in a .bib file. Essential entries:
+  Doosti and Hall (2016), Doosti, Hall and Mateu (2018),
+  Hall and Huang (2002), Hall and Presnell (1999),
+  Marron and Wand (1992), Marron and Nolan (1988),
+  Politis (2003), Politis and Romano (1999),
+  Botev, Grotowski and Kroese (2010), Silverman (1986),
+  Choi, Hall and Rousson (2000) for sharpData,
+  Duong (2007) for ks, and Goldfarb and Idnani (1983) for quadprog.
+-->

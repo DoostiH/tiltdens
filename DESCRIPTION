@@ -1,0 +1,37 @@
+Package: tiltdens
+Type: Package
+Title: Tilted and Data-Sharpened Nonparametric Density Estimation
+Version: 0.1.0
+Authors@R: c(
+    person("Hassan", "Doosti", email = "hassan.doosti@mq.edu.au",
+           role = c("aut", "cre"), comment = "Author of the underlying methods"),
+    person("Jorge", "Mateu", role = "aut"),
+    person("Peter", "Hall", role = "aut",
+           comment = "Author of the underlying methods; deceased 2016"))
+Description: High-order nonparametric density estimators built by perturbing a
+    conventional kernel estimator, either by re-weighting the observations
+    ("tilting") or by moving them ("data sharpening"). The perturbation is
+    chosen so that the estimator inherits the fast convergence rate of an
+    infinite-order kernel estimator, such as the sinc or trapezoidal flat-top
+    estimator, while remaining a proper non-negative density without the
+    oscillatory tails those estimators suffer from. Two criteria are provided:
+    minimising the L2 distance to an infinite-order comparator, following
+    Doosti and Hall (2016) <doi:10.1111/rssb.12112>, and minimising a
+    cross-validation criterion that needs no comparator and is much faster,
+    following Doosti, Hall and Mateu (2018) <doi:10.1016/j.jspi.2017.12.003>.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends: R (>= 3.5.0)
+Imports:
+    graphics,
+    stats,
+    quadprog
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 7.3.1
+Config/testthat/edition: 3
+URL: https://github.com/DoostiH/tiltdens
+BugReports: https://github.com/DoostiH/tiltdens/issues
