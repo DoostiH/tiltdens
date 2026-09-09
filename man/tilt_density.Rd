@@ -120,7 +120,7 @@ arrives at by construction from a pilot estimate.
 
 \examples{
 set.seed(1)
-x <- c(rnorm(50, -1.5), rnorm(50, 1.5))
+x <- c(rnorm(25, -1.5), rnorm(25, 1.5))
 
 fit <- tilt_density(x, m = 3)
 fit
@@ -132,11 +132,14 @@ abline(h = 0, col = "grey")
 min(sinc_density(x)$y)
 min(fit$y)
 
+\donttest{
 ## Choosing the block boundaries, rather than fixing them, lowers the
-## criterion the method is minimising.
+## criterion the method is minimising. Searching them is the slow option:
+## it examines every admissible pair, so its cost grows with n^2.
 c(equal   = tilt_density(x, m = 3, breaks = "equal")$distance2,
   modal   = tilt_density(x, m = 3, breaks = "modal")$distance2,
   optimal = tilt_density(x, m = 3, breaks = "optimal")$distance2)
+}
 
 }
 \references{

@@ -21,6 +21,7 @@ Description: High-order nonparametric density estimators built by perturbing a
     following Doosti, Hall and Mateu (2018) <doi:10.1016/j.jspi.2017.12.003>.
 License: MIT + file LICENSE
 Encoding: UTF-8
+Language: en-GB
 Depends: R (>= 3.5.0)
 Imports:
     graphics,

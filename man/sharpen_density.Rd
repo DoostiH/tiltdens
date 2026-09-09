@@ -65,12 +65,22 @@ usually at least as accurate and far cheaper, so [tilt_density()] and
 }
 \examples{
 set.seed(1)
-x <- c(rnorm(40, -1.5), rnorm(40, 1.5))
+x <- c(rnorm(15, -1.5), rnorm(15, 1.5))
 
-## Small budget so the example runs quickly.
-fit <- sharpen_density(x, m = 3,
-                       control = list(max_iterations = 20, population = 20))
+## A deliberately tiny search budget, so that this runs in about a second.
+## It is far too small for real use; see below for a realistic call.
+fit <- sharpen_density(x, m = 3, polish = FALSE,
+                       control = list(max_iterations = 10, population = 10))
 plot(fit)
+round(unique(fit$shifts), 3)
+
+\donttest{
+## Realistic settings. Expect this to take a few seconds, and much longer
+## with m = Inf, where the search ranges over one shift per observation.
+x <- c(rnorm(50, -1.5), rnorm(50, 1.5))
+fit <- sharpen_density(x, m = 3)
+fit
+}
 
 }
 \references{
