@@ -4,14 +4,12 @@
 * GitHub Actions: Windows, macOS, Ubuntu (release, devel, oldrel-1)
 
 ## R CMD check results
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-* This is a new release.
-* The words flagged as possibly misspelled in DESCRIPTION are the surname
-  Doosti and the technical terms "comparator" and "sinc" (the sinc kernel,
-  whose Fourier transform is flat on [-1, 1]). All are correct as written.
-
-## Note on this submission
-A previous submission of this package (0.1.0, 9 September 2026) was withdrawn
-by email to CRAN-submissions to correct the Authors@R field. This is the
-corrected version.
+## This release
+Version 0.2.0 responds to an editorial review of the accompanying Journal of
+Statistical Software submission. It fixes a bug in bw_flattop() for data with
+a large scale (affecting multivariate input such as datasets::faithful), adds a
+bounded and pluggable optimizer to sharpen_density(), adds make_kernel() and
+check_kernel(), adds conventional_density(), and corrects documentation. The
+sharpen_density() example now runs in about two seconds. See NEWS.md.
