@@ -91,7 +91,7 @@ sharpen_objective <- function(shifts, x, bw, comparator_bw, comparator,
 #'
 #' @examples
 #' set.seed(1)
-#' x <- c(rnorm(40, -1.5), rnorm(40, 1.5))
+#' x <- c(rnorm(20, -1.5), rnorm(20, 1.5))
 #'
 #' fit <- sharpen_density(x, m = 3)
 #' fit
